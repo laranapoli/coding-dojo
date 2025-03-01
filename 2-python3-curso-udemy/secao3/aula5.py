@@ -1,0 +1,4 @@
+"""
+bool (boolean)
+True / False
+"""
