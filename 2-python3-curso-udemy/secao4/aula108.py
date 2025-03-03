@@ -18,7 +18,7 @@ var_escopo_global = 1
 
 def escopo(): # Parâmetros da função fazem parte do escopo da função
     # Para manipular a variável do escopo de fora, declara ela como global
-    global var_escopo_global
+    global var_escopo_global  # global é uma má prática
     var_escopo_global = 'xpto'
 
     print(var_escopo_global) # Isso é uma má prática de programação
