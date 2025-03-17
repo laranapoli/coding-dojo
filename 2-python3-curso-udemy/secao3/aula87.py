@@ -5,7 +5,7 @@ Introdução ao desempacotamento
 - _ antes do nome da variável indica para o desenvolvedor que ñ será usada
 """
 
-nomes = ['Maria', 'Helena', 'Luiz']
+nomes = ['Maria', 'Helena', 'Luiz', 'Lara', 'Joana']
 
 _, _, nome, *resto = nomes
 
