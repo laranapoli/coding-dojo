@@ -1,0 +1,28 @@
+/app/
+ ├── __init__.py
+ ├── main.py                # Arquivo de inicialização da aplicação FastAPI
+ ├── api/
+ │    └── v1/
+ │        └── endpoints/
+ │            └── inference.py  # Rota de inferência do modelo
+ ├── core/
+ │    └── model.py            # Carregamento e gestão do modelo
+ │    └── config.py           # Configurações e variáveis globais
+ ├── services/
+ │    └── inference_service.py  # Lógica de inferência, como pré-processamento e inferência
+ ├── utils/
+ │    └── preprocessor.py      # Funções de pré-processamento para a entrada
+ │    └── postprocessor.py     # Funções de pós-processamento da resposta
+ ├── tests/
+ │    └── test_inference.py    # Testes para as rotas de inferência
+ ├── Dockerfile              # Para containerizar a aplicação
+ └── requirements.txt        # Dependências do projeto
+
+
+- Separion of Concerns (SoC): Cada parte do código tem uma responsabilidade clara
+- Modularidade: facilita a manutenção e extensão do código
+- Testabilidade: A divisão do código em serviços e utilitários facilita a criação 
+de testes unitários para cada parte, o que melhora a cobertura de testes e confiabilidade
+da aplicação.
+- Manutenção e Evolução: A organização facilita a adição de novas funcionalidades ou a 
+troca de dependências (como o modelo) sem alterar a estrutura principal da aplicação.

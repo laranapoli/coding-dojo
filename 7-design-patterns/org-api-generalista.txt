@@ -1,0 +1,101 @@
+# Clean Architecture / DDD Inspired
+myapi/
+├── app/
+│   ├── api/                   # Rotas (Controllers) e versionamento de API (ex: v1, v2)
+│   │   └── v1/
+│   │       ├── endpoints/      # Arquivos de rota (ex: user.py, order.py)
+│   │       └── __init__.py
+│   ├── core/                  # Configurações de app (ex: settings, logger, middlewares)
+│   │   ├── config.py
+│   │   ├── security.py
+│   │   └── __init__.py
+│   ├── models/                # Modelos ORM (ex: SQLAlchemy)
+│   │   ├── user.py
+│   │   ├── order.py
+│   │   └── __init__.py
+│   ├── schemas/               # Schemas Pydantic (DTOs para request/response)
+│   │   ├── user.py
+│   │   ├── order.py
+│   │   └── __init__.py
+│   ├── services/              # Lógica de negócio (casos de uso, services)
+│   │   ├── user_service.py
+│   │   └── __init__.py
+│   ├── repositories/          # Acesso a dados (interfaces e implementações)
+│   │   ├── user_repository.py
+│   │   └── __init__.py
+│   ├── deps/                  # Dependências para injeção via FastAPI Depends
+│   │   ├── db.py
+│   │   └── __init__.py
+│   ├── main.py                # Ponto de entrada da aplicação (FastAPI instance)
+│   └── __init__.py
+├── tests/                     # Testes unitários e de integração
+│   ├── api/
+│   ├── services/
+│   └── conftest.py
+├── Dockerfile
+├── pyproject.toml / requirements.txt
+├── alembic/ (opcional)        # Migrations se estiver usando SQLAlchemy
+└── README.md
+
+> O que são controllers?
+    Componentes responsáveis por receber requisições HTTP (GET, PU, POST, DELETE), processá-las 
+    (validar inputs, chamar serviços, retornar respostas) e conectar a camada da web (FastAPI) 
+    com a lógica de negócio (services). No FastAPI, quem faz o papel de controller são os endpoints.
+    Chamamos de controller os arquivos/funções que definem as rotas da API.
+
+    Fluxo clássico:
+
+        [Requisição HTTP]
+            ↓
+        [Controller (endpoint)]
+            ↓
+        [Service (lógica de negócio)]
+            ↓
+        [Repository (acesso ao banco)]
+
+> Para que é importante fazer o versionamento de API?
+    Permite implementar atualizações mantendo backwards compatibility (não quebrar aplicações
+    que consomem a versão mais antiga). Isso permite que clientes migrem no tempo deles. Uma 
+    maneira comum de versionar a API é na URL. Exemplo:
+
+        app.include_router(users_v1.router, prefix="/api/v1/users", tags=["users v1"])
+
+        app.include_router(users_v2.router, prefix="/api/v2/users", tags=["users v2"])
+
+> Exemplifique um código possível (e simples) em user_repository.py.
+    Objetivo: O repositório vai encapsular as operações com o banco de dados para a entidade User.
+
+> Qual é o objetivo do pacote de dependências?
+    Centralizar funções que serão injetadas via Depends() do FastAPI como: conexões com banco de 
+    dados (sessões), validação ou autenticação, dependências reutilizáveis em múltiplos controllers.
+    É uma maneira mais elegante de evitar duplicação de código e deixar o controller mais limpo.
+
+> O que é injeção de dependências e em quais casos ele pode ser usado (considerando a proposta da API)?
+    Conceito de design que visa desacoplar as diferentes partes do código ao fornecer dependências 
+    (como banco de dados, autenticação, etc.) de maneira externa e controlada, em vez de deixar que um 
+    componente (como um controller ou service) tenha que criá-las ou gerenciá-las.
+
+    DI é um padrão onde as dependências de uma classe (ou função) são passadas para ela de fora, em vez
+    de serem criadas dentro dela.
+
+> O que significa a sigla DTO (schemas/)?
+    Data transfer objects
+
+
+ESTRUTURA DO REPOSITÓRIO
+- Repository pattern: 
+    > Isola a lógica de acesso ao banco da lógica de negócios (services)
+    > Facilita o uso de mocks em testes e troca de banco de necessário
+
+- Service layer pattern:
+    > Lógica de negócio fica aqui, separada de controllers (rotas)
+
+- Dependency Injection Pattern:
+    > Define dependências para serem usadas via Depends() do FastAPI
+
+- DTO Pattern:
+    > Criação de Pydantic Models para definir bem os contratos de entrada e saída
+
+- Domain Separation / Clean Architecture:
+    > Separação clara entre camada de API, serviços e acesso a dados
+    > Torna o projeto mais fácil de evoluir sem gerar "acoplamento" forte
